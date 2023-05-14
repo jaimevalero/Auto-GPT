@@ -209,10 +209,10 @@ def scan_plugins(cfg: Config, debug: bool = False) -> List[AutoGPTPluginTemplate
     loaded_plugins = []
     # Generic plugins
     plugins_path_path = Path(cfg.plugins_dir)
+    debug = True
 
     logger.debug(f"Allowlisted Plugins: {cfg.plugins_allowlist}")
     logger.debug(f"Denylisted Plugins: {cfg.plugins_denylist}")
-
     for plugin in plugins_path_path.glob("*.zip"):
         if moduleList := inspect_zip_for_modules(str(plugin), debug):
             for module in moduleList:
@@ -232,6 +232,12 @@ def scan_plugins(cfg: Config, debug: bool = False) -> List[AutoGPTPluginTemplate
                         and denylist_allowlist_check(a_module.__name__, cfg)
                     ):
                         loaded_plugins.append(a_module())
+    #### Mi plugins
+    # Load module epg_catalog
+    nombre_modulo = "opt.epg_catalog"
+    modulo_cargado = importlib.import_module(nombre_modulo)
+    loaded_plugins.append(modulo_cargado.AutoGPTEPGCatalog())
+                   
     # OpenAI plugins
     if cfg.plugins_openai:
         manifests_specs = fetch_openai_plugins_manifest_and_spec(cfg)
