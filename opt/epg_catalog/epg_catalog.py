@@ -1,4 +1,4 @@
-"""Wikipedia search command for Autogpt."""
+"""EPG CATALOG search command for Autogpt."""
 from __future__ import annotations
 
 import json
@@ -10,7 +10,7 @@ import requests
 HTML_TAG_CLEANER = re.compile("<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});")
 
 
-def _wikipedia_search(query: str, num_results: int = 5) -> str | list[str]:
+def _epg_catalog_action(query: str, num_results: int = 5) -> str | list[str]:
     """Return the results of a Wikipedia search
     Args:
         query (str): The search query.
@@ -57,3 +57,10 @@ def _wikipedia_search(query: str, num_results: int = 5) -> str | list[str]:
             return f"'wikipedia_search' on query: {query} raised exception: {e}"
 
     return json.dumps(items, ensure_ascii=False, indent=4)
+
+# This function can receive anything as arguments
+def _dispatch_generic_action(**kwargs):
+    a = 0
+    print(str(kwargs))
+    return "Ejecucion correcta"
+    

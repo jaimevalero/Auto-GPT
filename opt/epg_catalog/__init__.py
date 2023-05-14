@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional, Tuple, TypedDict, TypeVar
 
 from auto_gpt_plugin_template import AutoGPTPluginTemplate
 
-from .epg_catalog import _wikipedia_search
+from .epg_catalog import _epg_catalog_action, _dispatch_generic_action
 
 PromptGenerator = TypeVar("PromptGenerator")
 
@@ -23,9 +23,7 @@ class AutoGPTEPGCatalog(AutoGPTPluginTemplate):
         self._name = "autogpt-epg-catalog"
         self._version = "0.1.0"
         self._description = "Wikipedia search integrations."
-        self._description = """ 
-        Telefonica's EPG Catalog for actions: 
-        - CRUD Operations for : VmWare Virtual Machines, OpenStack Tenants, Openshift Namespaces, DCIP Jenkins instances , Jira Proyects, Jira Issues, Harbor Proyects, Github Teams and repositories, permissions management for all of them."""
+        self._description = """ Telefonica's EPG Catalog for actions:          - CRUD Operations for : VmWare Virtual Machines, OpenStack Tenants, Openshift Namespaces, DCIP Jenkins instances , Jira Proyects, Jira Issues, Harbor Proyects, Github Teams and repositories, permissions management for all of them."""
 
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
@@ -67,7 +65,7 @@ class AutoGPTEPGCatalog(AutoGPTPluginTemplate):
         handle the post_planning method.
         Returns:
             bool: True if the plugin can handle the post_planning method."""
-        return False
+        return False # !!!! TAL VER SERIA UNA BUENA IDEA CAMBIAR ESTO, SI VEMOS QUE LA TAREA TIENE QUE VER CON LO QUE HACE EL PLUGIN
 
     def post_planning(self, response: str) -> str:
         """This method is called after the planning chat completeion is done.
@@ -131,7 +129,7 @@ class AutoGPTEPGCatalog(AutoGPTPluginTemplate):
         handle the pre_command method.
         Returns:
             bool: True if the plugin can handle the pre_command method."""
-        return False
+        return False # !!! Si se le pasa algo de este estilo, se le podría cambiar el command name command_name, arguments('jira_create_project', {'project_type': '<project_type>', 'project_lead': '<project_lead>', 'project_name': '<project_name>'})
 
     def pre_command(
         self, command_name: str, arguments: Dict[str, Any]
@@ -171,8 +169,8 @@ class AutoGPTEPGCatalog(AutoGPTPluginTemplate):
     ) -> bool:
         """This method is called to check that the plugin can
         handle the chat_completion method.
-        Args:
-            messages (Dict[Any, Any]): The messages.
+        Args:         
+            messages (Dict[Any, Any]): The messages. messages = [ {'role': 'system', 'content': 'You are FileReaderGP...json.loads'}, {'role': 'system', 'content': 'The current time and...00:19 2023'} ,{'role': 'user', 'content': 'Determine which next...ied above:'} ]
             model (str): The model name.
             temperature (float): The temperature.
             max_tokens (int): The max tokens.
@@ -207,10 +205,15 @@ class AutoGPTEPGCatalog(AutoGPTPluginTemplate):
             PromptGenerator: The prompt generator.
         """
 
-        prompt.add_command(
-            "epg_catalog",
-            "EPG Catalog",
-            {"query": "<query>"},
-            _wikipedia_search,
-        )
+        # prompt.add_command(
+        #     "epg_catalog",
+        #     """ Telefonica's EPG Catalog for actions:          - CRUD Operations for : VmWare Virtual Machines, OpenStack Tenants, Openshift Namespaces, DCIP Jenkins instances , Jira Proyects, Jira Issues, Harbor Proyects, Github Teams and repositories, permissions management for all of them.""",
+        #     {"query": "<query>"},
+        #     _epg_catalog_action,
+        # )
+        prompt.add_command('user_permission_project_create', 'Añadir usuarios a un proyecto', {'PROJECT_KEY': '<PROJECT_KEY>', 'ADMINISTRATORS': '<ADMINISTRATORS>', 'DEVELOPERS': '<DEVELOPERS>', 'USERS': '<USERS>'},_dispatch_generic_action)
+        prompt.add_command('user_permission_structure_create', 'Añadir permisos de Structure', {'USERS': '<USERS>'},_dispatch_generic_action)
+        prompt.add_command('jira_issue_create', 'Crear nueva issue', {'project': '<project>', 'summary': '<summary>', 'description': '<description>', 'assignee': '<assignee>', 'issuetype': '<issuetype>'},_dispatch_generic_action)
+        prompt.add_command('jira_read_only_user_create', 'Añadir usuario al team de read only', {'users': '<users>'},_dispatch_generic_action)
+        prompt.add_command('contint_token_create', 'Crear nuevo Token para usuario contint', {'project_name': '<project_name>', 'email_to_notify': '<email_to_notify>'},_dispatch_generic_action)
         return prompt
