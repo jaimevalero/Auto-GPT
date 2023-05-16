@@ -120,12 +120,7 @@ def execute_command(
         # TODO: Change these to take in a file rather than pasted code, if
         # non-file is given, return instructions "Input should be a python
         # filepath, write your code to file and try again
-        elif command_name in [ command["label"] for command in prompt.commands ]:
-            for command in prompt.commands :
-                if command_name.lower() == command["label"].lower() or command_name.lower() == command["name"].lower():
-                    print (command["function"].__name__,str(arguments))
-                    return command["function"](**arguments)
-        else :
+        else:
             for command in prompt.commands:
                 if (
                     command_name == command["label"].lower()
