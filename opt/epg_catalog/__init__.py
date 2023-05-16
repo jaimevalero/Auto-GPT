@@ -211,9 +211,13 @@ class AutoGPTEPGCatalog(AutoGPTPluginTemplate):
         #     {"query": "<query>"},
         #     _epg_catalog_action,
         # )
-        prompt.add_command('user_permission_project_create', 'Añadir usuarios a un proyecto', {'PROJECT_KEY': '<PROJECT_KEY>', 'ADMINISTRATORS': '<ADMINISTRATORS>', 'DEVELOPERS': '<DEVELOPERS>', 'USERS': '<USERS>'},_dispatch_generic_action)
-        prompt.add_command('user_permission_structure_create', 'Añadir permisos de Structure', {'USERS': '<USERS>'},_dispatch_generic_action)
-        prompt.add_command('jira_issue_create', 'Crear nueva issue', {'project': '<project>', 'summary': '<summary>', 'description': '<description>', 'assignee': '<assignee>', 'issuetype': '<issuetype>'},_dispatch_generic_action)
-        prompt.add_command('jira_read_only_user_create', 'Añadir usuario al team de read only', {'users': '<users>'},_dispatch_generic_action)
-        prompt.add_command('contint_token_create', 'Crear nuevo Token para usuario contint', {'project_name': '<project_name>', 'email_to_notify': '<email_to_notify>'},_dispatch_generic_action)
+        # change false, true
+        # cahnge enum
+        # change current user
+
+        prompt.add_command('create_jira_project', 
+                           'Crear nuevo proyecto en Jira', 
+                           { "project_name":"<project_name>" , "project_key":"<project_key>" , "project_lead" : "<user>" } ,
+                             _dispatch_generic_action ) 
+                           
         return prompt

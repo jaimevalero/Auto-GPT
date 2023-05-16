@@ -4,8 +4,9 @@ from __future__ import annotations
 import json
 import re
 from urllib.parse import quote
-
+import yaml
 import requests
+import ast
 
 HTML_TAG_CLEANER = re.compile("<.*?>|&([a-z0-9]+|#[0-9]{1,6}|#x[0-9a-f]{1,6});")
 
@@ -62,5 +63,17 @@ def _epg_catalog_action(query: str, num_results: int = 5) -> str | list[str]:
 def _dispatch_generic_action(**kwargs):
     a = 0
     print(str(kwargs))
+    # Load yaml file, giver service
+    cadena = kwargs["params"].replace("'", '"')
+    cadena = re.sub(r"\b(True|False)\b", r'"\g<1>"', cadena)
+    params = ast.literal_eval(cadena)
+    yaml_file = "/home/jaimevalero/git/epg-api/etc/service-portal-{service}.yaml"
+    with open(yaml_file, 'r') as stream:
+        try:
+            data = yaml.load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+
+
     return "Ejecucion correcta"
     
