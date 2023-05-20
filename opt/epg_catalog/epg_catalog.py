@@ -74,6 +74,6 @@ def _dispatch_generic_action(**kwargs):
         except yaml.YAMLError as exc:
             print(exc)
 
-
-    return "Ejecucion correcta"
+    response =  "Ejecucion correcta"
+    return { "response":  response}
     

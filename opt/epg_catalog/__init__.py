@@ -23,8 +23,8 @@ class AutoGPTEPGCatalog(AutoGPTPluginTemplate):
         self._name = "autogpt-epg-catalog"
         self._version = "0.1.0"
         self._description = "Wikipedia search integrations."
-        self._description = """ Telefonica's EPG Catalog for actions:          - CRUD Operations for : VmWare Virtual Machines, OpenStack Tenants, Openshift Namespaces, DCIP Jenkins instances , Jira Proyects, Jira Issues, Harbor Proyects, Github Teams and repositories, permissions management for all of them."""
-
+        self._description = """ Telefonica's EPG Catalog for actions:          - CRUD Operations for : Github Teams and repositories, permissions management for all of them."""
+        #: VmWare Virtual Machines, OpenStack Tenants, Openshift Namespaces, DCIP Jenkins instances , Jira Proyects, Jira Issues, Harbor Proyects,
     def can_handle_on_response(self) -> bool:
         """This method is called to check that the plugin can
         handle the on_response method.
@@ -214,10 +214,66 @@ class AutoGPTEPGCatalog(AutoGPTPluginTemplate):
         # change false, true
         # cahnge enum
         # change current user
-
-        prompt.add_command('create_jira_project', 
-                           'Crear nuevo proyecto en Jira', 
-                           { "project_name":"<project_name>" , "project_key":"<project_key>" , "project_lead" : "<user>" } ,
+        prompt.add_command('ask_inventory_information', 
+                           'Query inventory information about the infraestructure, users, permissions', 
+                           { "search":"<search>" } ,
                              _dispatch_generic_action ) 
+
+        prompt.add_command('github_add_usuario_organización', 
+                           'Github. Licencias de github. Añadir usuario a la organization', 
+                           { "github_username":"<login>" , "team":"<team_de_licencias>" } ,
+                             _dispatch_generic_action ) 
+        
+        prompt.add_command('github_delete_usuario_organización', 
+                           'Github. Licencias de github. Echar a usuario de la organization', 
+                           { "github_username":"<login>" } ,
+                             _dispatch_generic_action ) 
+        
+        prompt.add_command('github_add_copilot', 
+                           'Github. Licencias de copilot. Habilitar copilot para usuario',
+                           { "github_username":"<login>" } ,
+                             _dispatch_generic_action ) 
+        
+        prompt.add_command('github_remove_copilot', 
+                           'Github. Licencias de copilot. Deshabilitar copilot para usuario',
+                           { "github_username":"<login>" } ,
+                             _dispatch_generic_action ) 
+        
+        prompt.add_command('github_add_user_to_team', 
+                           'Github Teams. Añadir miembro a team',
+                           { "github_username":"<login>", "team":"<team>" } ,
+                             _dispatch_generic_action ) 
+        prompt.add_command('github_remove_user_to_team', 
+                           'Github Teams. Quitar miembro a team',
+                           { "github_username":"<login>", "team":"<team>" } ,
+                             _dispatch_generic_action )           
+
+
+    # - Licencias de de copilot
+    #     - Acciones: 
+    #         añadir_usuario_team: <github_username> , "copilot"
+    #         eliminar_usuario_team: <github_username>, "copilot"    
+    # - Teams de github
+    #         añadir_usuario_team: <github_username>, <team>
+    #         eliminar_usuario_team: <github_username>, <team>    
+    # - Repositorios:
+    #         crear_repositorio: <nombre_repositorio>
+    #         eliminar_repositorio: <nombre_repositorio>
+    #         modificar_repositorio: <nombre_repositorio>
+    #         añadir tag: <nombre_repositorio>, <tag>
+    # - Tokens    
+    #         crear_token: <nombre_token>
+    #         eliminar_token: <nombre_token>
+    #         modificar_token: <nombre_token>
+    # - Webapps  (Prisma)
+    #         añadir_repo_webapp: "prisma", <nombre_repositorio>
+
+
+
+
+    #     prompt.add_command('create_jira_project', 
+    #                        'Crear nuevo proyecto en Jira', 
+    #                        { "project_name":"<project_name>" , "project_key":"<project_key>" , "project_lead" : "<user>" } ,
+    #                          _dispatch_generic_action ) 
                            
         return prompt
